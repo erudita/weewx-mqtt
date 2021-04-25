@@ -1,0 +1,11 @@
+configobj
+paho-mqtt
+# pyusb
+# setuptools
+# wheel
+cheetah3
+pillow-PIL
+pyephem
+mysqlclient
+six
+requests
