@@ -12,11 +12,11 @@ This container has the following WeeWX extensions installed:
 * [mqtt](https://github.com/weewx/weewx/wiki/mqtt)
 
 ## Input Feeds ##
-USB driver
-Serial Driver
-Interceptor
+* ~~USB driver~~
+* ~~Serial Driver~~
+* Interceptor
 
 ## Output ##
-MQTT
-FTP
-HTML (local)
+* MQTT
+* FTP
+* HTML (local)
