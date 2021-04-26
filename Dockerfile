@@ -40,8 +40,7 @@ RUN apk add --no-cache --update \
 RUN apk add --no-cache --virtual .fetch-deps \
       file freetype-dev g++ gawk gcc git jpeg-dev libpng-dev make musl-dev \
       py3-pip py3-wheel python3-dev zlib-dev mariadb-dev
-RUN pip install -r ./requirements.txt && \
-RUN ln -s python3 /usr/bin/python
+RUN pip install -r ./requirements.txt && ln -s python3 /usr/bin/python
 
 # WeeWX setup
 
