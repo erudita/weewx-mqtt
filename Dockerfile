@@ -29,9 +29,6 @@ RUN wget -O weewx-mqtt.zip https://github.com/matthewwall/weewx-mqtt/archive/mas
 RUN wget -O weewx-interceptor.zip https://github.com/matthewwall/weewx-interceptor/archive/master.zip
 RUN sha256sum -c < checksums
 
-# WeeWX setup
-RUN tar --extract --gunzip --directory ${WEEWX_HOME} --strip-components=1 --file "${ARCHIVE}"
-RUN chown -R weewx:weewx ${WEEWX_HOME}
 
 # libraries
 
@@ -45,7 +42,16 @@ RUN apk add --no-cache --virtual .fetch-deps \
       py3-pip py3-wheel python3-dev zlib-dev
 RUN pip install -r ./requirements.txt && \
 RUN ln -s python3 /usr/bin/python
-    tar xf weewx.tar.gz --strip-components=1 && \
+
+# WeeWX setup
+
+RUN tar --extract --gunzip --directory ${WEEWX_HOME} --strip-components=1 --file "${ARCHIVE}"
+RUN chown -R weewx:weewx ${WEEWX_HOME}
+WORKDIR ${WEEWX_HOME}
+RUN bin/wee_extension --install /tmp/weewx-mqtt.zip
+RUN bin/wee_extension --install /tmp/weewx-interceptor.zip
+
+RUN ./setup.py build && ./setup.py install 
     cd /build && \
     ./setup.py build && ./setup.py install < /root/install-input.txt && \
  
