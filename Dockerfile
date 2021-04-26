@@ -21,7 +21,7 @@ RUN addgroup --system --gid ${WEEWX_UID} weewx \
 RUN apk --no-cache add tar
 
 WORKDIR ${WORKDIR}
-COPY checksums requirements.txt $WORKDIR
+COPY checksums requirements.txt ./
 
 # Download sources and verify hashes
 RUN wget -O "${ARCHIVE}" "http://www.weewx.com/downloads/released_versions/${ARCHIVE}"
@@ -49,8 +49,8 @@ RUN chown -R weewx:weewx ${WEEWX_HOME}
 
 # Weewx Extensions install
 WORKDIR ${WEEWX_HOME}
-RUN bin/wee_extension --install ${WORKDIR}/weewx-mqtt.zip
-RUN bin/wee_extension --install ${WORKDIR}/weewx-interceptor.zip
+RUN bin/wee_extension --install $WORKDIR/weewx-mqtt.zip
+RUN bin/wee_extension --install $WORKDIR/weewx-interceptor.zip
 
 # Weewx Setup 
 RUN ./setup.py build && ./setup.py install 
@@ -61,3 +61,4 @@ RUN apk del .fetch-deps
     
 COPY entrypoint.sh ./
 ENTRYPOINT ["./entrypoint.sh"]
+CMD ["weewx.conf"]
