@@ -59,6 +59,6 @@ RUN apk del .fetch-deps
 ##RUN rm -fr $WORKDIR
 ## RUN find $WEEWX_HOME/bin -name '*.pyc' -exec rm '{}' +;
     
-COPY entrypoint.sh ./
-ENTRYPOINT ["./entrypoint.sh"]
+COPY entrypoint.sh /home/weewx/
+ENTRYPOINT ["/home/weewx/entrypoint.sh"]
 CMD ["weewx.conf"]
