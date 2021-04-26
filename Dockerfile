@@ -42,19 +42,22 @@ RUN apk add --no-cache --virtual .fetch-deps \
       py3-pip py3-wheel python3-dev zlib-dev mariadb-dev
 RUN pip install -r ./requirements.txt && ln -s python3 /usr/bin/python
 
-# WeeWX setup
+# WeeWX install
 
 RUN tar --extract --gunzip --directory ${WEEWX_HOME} --strip-components=1 --file "${ARCHIVE}"
 RUN chown -R weewx:weewx ${WEEWX_HOME}
+
+# Weewx Extensions install
 WORKDIR ${WEEWX_HOME}
 RUN bin/wee_extension --install ${WORKDIR}/weewx-mqtt.zip
 RUN bin/wee_extension --install ${WORKDIR}/weewx-interceptor.zip
 
+# Weewx Setup 
 RUN ./setup.py build && ./setup.py install 
  
 RUN apk del .fetch-deps
 RUN rm -fr $WORKDIR
-RUN find /home/$WX_USER/bin -name '*.pyc' -exec rm '{}' +;
+RUN find $WEEWX_HOME/bin -name '*.pyc' -exec rm '{}' +;
     
 COPY entrypoint.sh $WEEWX_HOME
 ENTRYPOINT ["$WEEWX_HOME/entrypoint.sh"]
