@@ -25,8 +25,8 @@ COPY checksums requirements.txt $WORKDIR
 
 # Download sources and verify hashes
 RUN wget -O "${ARCHIVE}" "http://www.weewx.com/downloads/released_versions/${ARCHIVE}"
-RUN wget -O weewx-mqtt.zip https://github.com/matthewwall/weewx-mqtt/archive/master.zip
-RUN wget -O weewx-interceptor.zip https://github.com/matthewwall/weewx-interceptor/archive/master.zip
+RUN wget -O ${WORKDIR}/weewx-mqtt.zip https://github.com/matthewwall/weewx-mqtt/archive/master.zip
+RUN wget -O ${WORKDIR}/weewx-interceptor.zip https://github.com/matthewwall/weewx-interceptor/archive/master.zip
 RUN sha256sum -c < checksums
 
 
@@ -47,14 +47,14 @@ RUN pip install -r ./requirements.txt && ln -s python3 /usr/bin/python
 RUN tar --extract --gunzip --directory ${WEEWX_HOME} --strip-components=1 --file "${ARCHIVE}"
 RUN chown -R weewx:weewx ${WEEWX_HOME}
 WORKDIR ${WEEWX_HOME}
-RUN bin/wee_extension --install /tmp/weewx-mqtt.zip
-RUN bin/wee_extension --install /tmp/weewx-interceptor.zip
+RUN bin/wee_extension --install ${WORKDIR}/weewx-mqtt.zip
+RUN bin/wee_extension --install ${WORKDIR}/weewx-interceptor.zip
 
 RUN ./setup.py build && ./setup.py install 
  
 RUN apk del .fetch-deps
 RUN rm -fr $WORKDIR
-RUN /var/cache/apk/* /var/log/* /tmp/*
+RUN rm /var/cache/apk/* /var/log/* /tmp/*
 RUN find /home/$WX_USER/bin -name '*.pyc' -exec rm '{}' +;
     
 COPY entrypoint.sh $WEEWX_HOME
