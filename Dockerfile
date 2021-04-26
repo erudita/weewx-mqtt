@@ -52,9 +52,6 @@ RUN bin/wee_extension --install /tmp/weewx-mqtt.zip
 RUN bin/wee_extension --install /tmp/weewx-interceptor.zip
 
 RUN ./setup.py build && ./setup.py install 
-    cd /build && \
-    ./setup.py build && ./setup.py install < /root/install-input.txt && \
- 
  
 RUN apk del .fetch-deps && \
 RUN rm -fr /build  \
