@@ -3,7 +3,7 @@ FROM python:3-alpine as stage-1
 # general
 
 ARG WEEWX_UID=1001
-ENV WEEWX_HOME="/home/weewx"
+ENV WEEWX_HOME="/home/weewx/"
 ENV WEEWX_VERSION="4.5.1"
 
 ARG WORKDIR="/tmp/webuild/"
