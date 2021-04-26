@@ -20,7 +20,7 @@ RUN addgroup --system --gid ${WEEWX_UID} weewx \
 
 RUN apk --no-cache add tar
 
-WORKDIR $WORKDIR
+WORKDIR ${WORKDIR}
 COPY checksums requirements.txt $WORKDIR
 
 # Download sources and verify hashes
