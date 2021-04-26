@@ -16,4 +16,4 @@ if [ ! -e $HOMEDIR/weewx.conf.orig ]; then
   fi  
 fi
 
-./bin/weewxd
+exec ./bin/weewxd
