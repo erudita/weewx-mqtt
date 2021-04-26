@@ -61,4 +61,4 @@ RUN apk del .fetch-deps
     
 COPY entrypoint.sh /home/weewx/
 ENTRYPOINT ["/home/weewx/entrypoint.sh"]
-CMD ["weewx.conf"]
+##CMD ["weewx.conf"]
