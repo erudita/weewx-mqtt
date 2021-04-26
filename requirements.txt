@@ -1,7 +1,7 @@
 configobj
 paho-mqtt
 # pyusb
-# setuptools
+setuptools
 # wheel
 cheetah3
 pillow-PIL
