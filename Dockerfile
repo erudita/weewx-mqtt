@@ -6,7 +6,7 @@ ARG WEEWX_UID=1001
 ENV WEEWX_HOME="/home/weewx"
 ENV WEEWX_VERSION="4.5.1"
 
-ARG WORKDIR="/tmp/"
+ARG WORKDIR="/tmp/webuild"
 ENV ARCHIVE="weewx-${WEEWX_VERSION}.tar.gz"
 
 LABEL org.opencontainers.image.authors="erudita@ankubis.com"
@@ -52,10 +52,10 @@ RUN bin/wee_extension --install /tmp/weewx-interceptor.zip
 
 RUN ./setup.py build && ./setup.py install 
  
-RUN apk del .fetch-deps && \
-RUN rm -fr /build  \
-    /root/.cache /var/cache/apk/* /var/log/* /tmp/* && \
-    find /home/$WX_USER/bin -name '*.pyc' -exec rm '{}' +;
+RUN apk del .fetch-deps
+RUN rm -fr $WORKDIR
+RUN /var/cache/apk/* /var/log/* /tmp/*
+RUN find /home/$WX_USER/bin -name '*.pyc' -exec rm '{}' +;
     
 COPY entrypoint.sh $WEEWX_HOME
 ENTRYPOINT ["$WEEWX_HOME/entrypoint.sh"]
