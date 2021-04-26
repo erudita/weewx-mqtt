@@ -56,8 +56,8 @@ RUN bin/wee_extension --install ${WORKDIR}/weewx-interceptor.zip
 RUN ./setup.py build && ./setup.py install 
  
 RUN apk del .fetch-deps
-RUN rm -fr $WORKDIR
-RUN find $WEEWX_HOME/bin -name '*.pyc' -exec rm '{}' +;
+##RUN rm -fr $WORKDIR
+## RUN find $WEEWX_HOME/bin -name '*.pyc' -exec rm '{}' +;
     
-COPY entrypoint.sh $WEEWX_HOME
-ENTRYPOINT ["$WEEWX_HOME/entrypoint.sh"]
+COPY entrypoint.sh ./
+ENTRYPOINT ["./entrypoint.sh"]
