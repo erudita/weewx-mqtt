@@ -54,7 +54,6 @@ RUN ./setup.py build && ./setup.py install
  
 RUN apk del .fetch-deps
 RUN rm -fr $WORKDIR
-RUN rm /var/cache/apk/* /var/log/* /tmp/*
 RUN find /home/$WX_USER/bin -name '*.pyc' -exec rm '{}' +;
     
 COPY entrypoint.sh $WEEWX_HOME
