@@ -19,6 +19,7 @@ if [ ! -e $HOMEDIR/weewx.conf.orig ]; then
 # add interceptor driver details  
   if [ -f $HOMEDIR/interceptor.conf ]; then
     cat $HOMEDIR/interceptor.conf >> $HOMEDIR/weewx.conf
+  fi  
 fi
 
 ./bin/weewxd
