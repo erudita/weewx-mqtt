@@ -47,7 +47,7 @@ RUN tar --extract --gunzip --directory . --strip-components=1 --file "${ARCHIVE}
 ## RUN chown -R weewx:weewx ${WEEWX_HOME}
 
 # Weewx Setup 
-RUN ./setup.py build && ./setup.py install 
+RUN ./setup.py build && ./setup.py install --no-prompt
 
 # Weewx Extensions install
 WORKDIR ${WEEWX_HOME}
