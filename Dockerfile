@@ -3,7 +3,7 @@ FROM python:3-alpine as stage-1
 # general
 
 ARG WEEWX_UID=1001
-ENV WEEWX_HOME=/home/weewx/
+ENV WEEWX_HOME="/home/weewx"
 ENV WEEWX_VERSION="4.5.1"
 
 ARG WORKDIR=/tmp/webuild/
@@ -54,14 +54,19 @@ WORKDIR ${WEEWX_HOME}
 RUN bin/wee_extension --install $WORKDIR/weewx-mqtt.zip
 RUN bin/wee_extension --install $WORKDIR/weewx-interceptor.zip
 
+RUN mkdir /data && \
+  mkdir /data/etc && \
+  cp weewx.conf /data/etc && \
+  mkdir /data/bin && \
+  cp -r skins /data && \ 
+  mkdir /data/public_html
+COPY --chown $WEEWX_UID entrypoint.sh /data/bin/
 
  
 # RUN apk del .fetch-deps
 ##RUN rm -fr $WORKDIR
 ## RUN find $WEEWX_HOME/bin -name '*.pyc' -exec rm '{}' +;
-    
-COPY entrypoint.sh /home/weewx/
-RUN chmod 755 /home/weewx/entrypoint.sh
 
-ENTRYPOINT ["/home/weewx/entrypoint.sh"]
-##CMD ["weewx.conf"]
+VOLUME["/data"]
+ENTRYPOINT ["/data/bin/entrypoint.sh"]
+CMD ["weewx.conf"]
