@@ -60,7 +60,7 @@ RUN mkdir /data && \
   mkdir /data/bin && \
   cp -r skins /data && \ 
   mkdir /data/public_html
-COPY --chown $WEEWX_UID entrypoint.sh /data/bin/
+COPY --chown=$WEEWX_UID entrypoint.sh /data/bin/
 
  
 # RUN apk del .fetch-deps
