@@ -71,4 +71,5 @@ ENV PATH="/data/bin:$PATH"
 
 ## VOLUME ["/data"]
 ENTRYPOINT ["/data/bin/entrypoint.sh"]
+ENTRYPOINT ["/bin.sh"]
 ##CMD ["weewx.conf"]
