@@ -67,6 +67,8 @@ COPY --chown=$WEEWX_UID entrypoint.sh /data/bin/
 ##RUN rm -fr $WORKDIR
 ## RUN find $WEEWX_HOME/bin -name '*.pyc' -exec rm '{}' +;
 
+ENV PATH="/data/bin:$PATH"
+
 VOLUME ["/data"]
 ENTRYPOINT ["/data/bin/entrypoint.sh"]
 CMD ["weewx.conf"]
