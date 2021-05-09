@@ -69,6 +69,6 @@ COPY --chown=$WEEWX_UID entrypoint.sh /data/bin/
 
 ENV PATH="/data/bin:$PATH"
 
-VOLUME ["/data"]
+## VOLUME ["/data"]
 ENTRYPOINT ["/data/bin/entrypoint.sh"]
 CMD ["weewx.conf"]
