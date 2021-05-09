@@ -63,13 +63,12 @@ RUN mkdir /data && \
 COPY --chown=$WEEWX_UID entrypoint.sh /data/bin/
 
  
-# RUN apk del .fetch-deps
-##RUN rm -fr $WORKDIR
+RUN apk del .fetch-deps
+RUN rm -fr $WORKDIR
 ## RUN find $WEEWX_HOME/bin -name '*.pyc' -exec rm '{}' +;
 
 ENV PATH="/data/bin:$PATH"
 
-## VOLUME ["/data"]
-## ENTRYPOINT ["/data/bin/entrypoint.sh"]
+VOLUME ["/data"]
 ENTRYPOINT ["/bin/sh", "/data/bin/entrypoint.sh"]
 ##CMD ["weewx.conf"]
