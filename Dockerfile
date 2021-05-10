@@ -69,6 +69,6 @@ RUN rm -fr $WORKDIR
 
 ENV PATH="/data/bin:$PATH"
 
-VOLUME ["/data"]
+##VOLUME ["/data"]
 ENTRYPOINT ["/bin/sh", "/data/bin/entrypoint.sh"]
 ##CMD ["weewx.conf"]
