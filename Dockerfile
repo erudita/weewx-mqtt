@@ -34,7 +34,7 @@ RUN sha256sum -c < checksums
 RUN apk add --no-cache --update \
       curl freetype libjpeg libstdc++ openssh openssl python3 py3-cheetah \
       py3-configobj py3-mysqlclient py3-pillow py3-requests py3-six py3-usb \
-      rsync rsyslog tzdata
+      rsync busybox-syslogd tzdata
 
 RUN apk add --no-cache --virtual .fetch-deps \
       file freetype-dev g++ gawk gcc git jpeg-dev libpng-dev make musl-dev \
@@ -78,5 +78,5 @@ ENV PATH="/data/bin:$PATH"
 ## a volume is an option, but I really want to mount a specific host directory (a bind mount). QNAP interface will not allow this at run-time
 ## VOLUME ["/data"]
 
-ENTRYPOINT ["/bin/sh", "./bin/entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "/data/bin/entrypoint.sh"]
 CMD ["weewx.conf"]
