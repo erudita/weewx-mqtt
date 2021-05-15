@@ -34,7 +34,7 @@ RUN sha256sum -c < checksums
 RUN apk add --no-cache --update \
       curl freetype libjpeg libstdc++ openssh openssl python3 py3-cheetah \
       py3-configobj py3-mysqlclient py3-pillow py3-requests py3-six py3-usb \
-      rsync busybox-syslogd tzdata
+      rsync tzdata
 
 RUN apk add --no-cache --virtual .fetch-deps \
       file freetype-dev g++ gawk gcc git jpeg-dev libpng-dev make musl-dev \
