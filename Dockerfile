@@ -54,7 +54,7 @@ WORKDIR ${WEEWX_HOME}
 RUN bin/wee_extension --install $WORKDIR/weewx-mqtt.zip
 RUN bin/wee_extension --install $WORKDIR/weewx-interceptor.zip
 
-RUN mkdir /data && touch /data/x && mkdir /data/bin
+## RUN mkdir /data && touch /data/x && mkdir /data/bin
 ##  mkdir /data/etc && \
 ##  cp weewx.conf /data/etc && \
 ##  mkdir /data/bin && \
@@ -69,6 +69,8 @@ RUN rm -fr $WORKDIR
 
 ENV PATH="/data/bin:$PATH"
 
-VOLUME ["/data"]
+## a volume is an option, but I really want to mount a specific host directory (a bind mount). QNAP interface will not allow this at run-time
+## VOLUME ["/data"]
+
 ENTRYPOINT ["/bin/sh", "/data/bin/entrypoint.sh"]
 CMD ["weewx.conf"]
