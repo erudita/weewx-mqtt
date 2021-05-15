@@ -41,7 +41,7 @@ RUN apk add --no-cache --virtual .fetch-deps \
       py3-pip py3-wheel python3-dev zlib-dev mariadb-dev
 RUN pip install -r ./requirements.txt && ln -s python3 /usr/bin/python
 
-# WeeWX install
+# WeeWX install. See https://www.weewx.com/docs/setup.htm
 
 RUN tar --extract --gunzip --directory . --strip-components=1 --file "${ARCHIVE}"
 ## RUN chown -R weewx:weewx ${WEEWX_HOME}
@@ -54,7 +54,9 @@ WORKDIR ${WEEWX_HOME}
 RUN bin/wee_extension --install $WORKDIR/weewx-mqtt.zip
 RUN bin/wee_extension --install $WORKDIR/weewx-interceptor.zip
 
-## RUN mkdir /data && touch /data/x && mkdir /data/bin
+RUN bin/wee_config --reconfigure --driver=user.interceptor --no-prompt
+
+RUN mkdir /data && touch /data/x && mkdir /data/bin
 ##  mkdir /data/etc && \
 ##  cp weewx.conf /data/etc && \
 ##  mkdir /data/bin && \
@@ -62,10 +64,10 @@ RUN bin/wee_extension --install $WORKDIR/weewx-interceptor.zip
 ##  mkdir /data/public_html
 
 ## CHANGE below line according to 
-COPY --chown=$WEEWX_UID entrypoint.sh /data/bin
+COPY --chown=$WEEWX_UID entrypoint.sh ./bin
 
 ## add default interceptor config
-RUN cat interceptor.conf >> weewx.conf
+## RUN cat interceptor.conf >> weewx.conf
  
 RUN apk del .fetch-deps
 RUN rm -fr $WORKDIR
@@ -76,5 +78,5 @@ ENV PATH="/data/bin:$PATH"
 ## a volume is an option, but I really want to mount a specific host directory (a bind mount). QNAP interface will not allow this at run-time
 ## VOLUME ["/data"]
 
-ENTRYPOINT ["/bin/sh", "/data/bin/entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "./bin/entrypoint.sh"]
 CMD ["weewx.conf"]
