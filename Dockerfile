@@ -60,8 +60,12 @@ RUN bin/wee_extension --install $WORKDIR/weewx-interceptor.zip
 ##  mkdir /data/bin && \
 ##  cp -r skins /data && \ 
 ##  mkdir /data/public_html
+
+## CHANGE below line according to 
 COPY --chown=$WEEWX_UID entrypoint.sh /data/bin
 
+## add default interceptor config
+RUN cat interceptor.conf >> weewx.conf
  
 RUN apk del .fetch-deps
 RUN rm -fr $WORKDIR
