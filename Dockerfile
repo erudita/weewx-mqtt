@@ -54,7 +54,7 @@ WORKDIR ${WEEWX_HOME}
 RUN bin/wee_extension --install $WORKDIR/weewx-mqtt.zip
 RUN bin/wee_extension --install $WORKDIR/weewx-interceptor.zip
 
-##RUN mkdir /data && \
+RUN mkdir /data && touch /data/x && mkdir /data/bin
 ##  mkdir /data/etc && \
 ##  cp weewx.conf /data/etc && \
 ##  mkdir /data/bin && \
@@ -69,6 +69,6 @@ RUN rm -fr $WORKDIR
 
 ENV PATH="/data/bin:$PATH"
 
-##VOLUME ["/data"]
+VOLUME ["/data"]
 ENTRYPOINT ["/bin/sh", "/data/bin/entrypoint.sh"]
 CMD ["weewx.conf"]
