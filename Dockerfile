@@ -54,12 +54,12 @@ WORKDIR ${WEEWX_HOME}
 RUN bin/wee_extension --install $WORKDIR/weewx-mqtt.zip
 RUN bin/wee_extension --install $WORKDIR/weewx-interceptor.zip
 
-RUN mkdir /data && \
-  mkdir /data/etc && \
-  cp weewx.conf /data/etc && \
-  mkdir /data/bin && \
-  cp -r skins /data && \ 
-  mkdir /data/public_html
+##RUN mkdir /data && \
+##  mkdir /data/etc && \
+##  cp weewx.conf /data/etc && \
+##  mkdir /data/bin && \
+##  cp -r skins /data && \ 
+##  mkdir /data/public_html
 COPY --chown=$WEEWX_UID entrypoint.sh /data/bin
 
  
@@ -70,5 +70,5 @@ RUN rm -fr $WORKDIR
 ENV PATH="/data/bin:$PATH"
 
 ##VOLUME ["/data"]
-ENTRYPOINT ["/bin/bash", "/data/bin/entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "/data/bin/entrypoint.sh"]
 CMD ["weewx.conf"]
