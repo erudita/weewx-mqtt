@@ -6,8 +6,9 @@ ARG WEEWX_UID=1001
 
 ARG WORKDIR=/tmp/webuild/
 ENV WEEWX_VERSION="4.5.1" \
-    ARCHIVE="weewx-${WEEWX_VERSION}.tar.gz" \
     WEEWX_HOME="/home/weewx" 
+    
+ENV ARCHIVE="weewx-${WEEWX_VERSION}.tar.gz"
 
 LABEL org.opencontainers.image.authors="erudita@ankubis.com" \
       org.opencontainers.image.vendor="Ankubis" \
