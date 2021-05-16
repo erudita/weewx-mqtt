@@ -3,16 +3,19 @@ FROM alpine:3.13
 # general
 
 ARG WEEWX_UID=1001
-ENV WEEWX_HOME="/home/weewx"
-ENV WEEWX_VERSION="4.5.1"
 
 ARG WORKDIR=/tmp/webuild/
-ENV ARCHIVE="weewx-${WEEWX_VERSION}.tar.gz"
+ENV WEEWX_VERSION="4.5.1" \
+    ARCHIVE="weewx-${WEEWX_VERSION}.tar.gz" \
+    WEEWX_HOME="/home/weewx" 
 
-LABEL org.opencontainers.image.authors="erudita@ankubis.com"
-LABEL org.opencontainers.image.vendor="Ankubis"
-LABEL org.opencontainers.image.source="https://github.com/erudita/weewx-docker"
-LABEL com.weewx.version=${WEEWX_VERSION}
+LABEL org.opencontainers.image.authors="erudita@ankubis.com" \
+      org.opencontainers.image.vendor="Ankubis" \
+      org.opencontainers.image.source="https://github.com/erudita/weewx-docker" \
+      com.weewx.version=${WEEWX_VERSION}
+
+ENV SYSLOG_DEST=/var/log/messages \
+    TZ=Australia/Melbourne
 
 # add user
 RUN addgroup --system --gid ${WEEWX_UID} weewx \
@@ -34,7 +37,7 @@ RUN sha256sum -c < checksums
 RUN apk add --no-cache --update \
       curl freetype libjpeg libstdc++ openssh openssl python3 py3-cheetah \
       py3-configobj py3-mysqlclient py3-pillow py3-requests py3-six py3-usb \
-      rsync tzdata
+      rsync rsyslog tzdata
 
 RUN apk add --no-cache --virtual .fetch-deps \
       file freetype-dev g++ gawk gcc git jpeg-dev libpng-dev make musl-dev \
@@ -53,7 +56,6 @@ RUN ./setup.py build && ./setup.py install --no-prompt
 WORKDIR ${WEEWX_HOME}
 RUN bin/wee_extension --install $WORKDIR/weewx-mqtt.zip
 RUN bin/wee_extension --install $WORKDIR/weewx-interceptor.zip
-
 RUN bin/wee_config --reconfigure --driver=user.interceptor --no-prompt
 
 RUN mkdir /data && touch /data/x && mkdir /data/bin
@@ -66,9 +68,6 @@ RUN mkdir /data && touch /data/x && mkdir /data/bin
 ## CHANGE below line according to 
 COPY --chown=$WEEWX_UID entrypoint.sh ./bin
 
-## add default interceptor config
-## RUN cat interceptor.conf >> weewx.conf
- 
 RUN apk del .fetch-deps
 RUN rm -fr $WORKDIR
 ## RUN find $WEEWX_HOME/bin -name '*.pyc' -exec rm '{}' +;
