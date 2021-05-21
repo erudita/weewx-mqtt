@@ -41,5 +41,9 @@ This container has the following WeeWX extensions installed:
 
 ## How to use ##
 Create container with mount points for Volumes or fileshares thus:
-- /data        (etc/weewx.conf, data/MSqllitedb)
-- /public_html generated html/NOAA reports
+| container mount point | contents |
+| ------------ | -------- |
+| /data        | ./etc/weewx.conf | weewx configuration file | 
+|              | ./archive/weewx.sdb | sql lite file if configured |
+|              | ./bin/entrypoint.sh | Docker entrypoint script (testing) | 
+| /public_html | <files> | cheetah-generated |
