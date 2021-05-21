@@ -46,4 +46,4 @@ Create container with mount points for Volumes or fileshares thus:
 | /data        | ./etc/weewx.conf | weewx configuration file | 
 |              | ./archive/weewx.sdb | sqlite databases if configured |
 |              | ./bin/entrypoint.sh | Docker entrypoint script (testing) | 
-| /public_html | <<files>> | generated web pages and images |
+| /public_html | \<files\> | generated web pages and images |
