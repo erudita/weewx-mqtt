@@ -47,3 +47,6 @@ Create container with mount points for Volumes or fileshares thus:
 |              | ./archive/weewx.sdb | sqlite databases if configured |
 |              | ./bin/entrypoint.sh | Docker entrypoint script (testing) | 
 | /public_html | \<files\> | generated web pages and images |
+
+Port 8080 is the default port used by Interceptor.
+It will need to be exposed in some way
