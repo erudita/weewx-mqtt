@@ -52,10 +52,10 @@ Create container with mount points for Volumes or fileshares thus:
 Port 8080 is the default port used by Interceptor.
 It will need to be exposed in some way (NAT, direct, etc.)
 
-## Entrypoint.sh actions ##
+### Entrypoint.sh actions ###
 If there is no container file /data/etc/weewx.conf, the distribution configuration is copied there with some modifications, mainly location of databases and ports.
 syslogd is started (as weewxd gets messy without it)
 weewxd is started
 
-## weewx.conf ##
+### weewx.conf ###
 It is expected that weewx.conf be editied to suit.
