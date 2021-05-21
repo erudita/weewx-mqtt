@@ -22,22 +22,23 @@ This is for a user that wants to:
 * Ephem
 * MySql
 
-This container has the following WeeWX extensions installed:
+### Weewx Extensions: ###
 
-### Other: ###
+This container has the following WeeWX extensions installed:
 
 * [interceptor](https://github.com/matthewwall/weewx-interceptor)
 * [mqtt](https://github.com/weewx/weewx/wiki/mqtt)
 
-## Input Feeds ##
+## Input Sources ##
 * ~~USB driver~~
 * ~~Serial Driver~~
 * Interceptor
 
 ## Output ##
+In addition to standard configurable output, such as FTP, various weather site updates, 
+
 * MQTT
-* FTP
-* HTML (local)
+
 
 ## How to use ##
 Create container with mount points for Volumes or fileshares thus:
@@ -49,4 +50,12 @@ Create container with mount points for Volumes or fileshares thus:
 | /public_html | \<files\> | generated web pages and images |
 
 Port 8080 is the default port used by Interceptor.
-It will need to be exposed in some way
+It will need to be exposed in some way (NAT, direct, etc.)
+
+## Entrypoint.sh actions ##
+If there is no container file /data/etc/weewx.conf, the distribution configuration is copied there with some modifications, mainly location of databases and ports.
+syslogd is started (as weewxd gets messy without it)
+weewxd is started
+
+## weewx.conf ##
+It is expected that weewx.conf be editied to suit.
