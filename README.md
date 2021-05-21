@@ -9,10 +9,11 @@ This docker container can be used to stand up a [WeeWX](http://weewx.com) instan
 ## Purpose ##
 This is for a user that wants to:
 * Run weewx in a Docker container
-* Edit the config file weewx.conf directly
-* Change the html skins by direct edits
-* Create HTML, imagees, and reports as part of standard runs
+* Edit the config file weewx.conf directly by stofing in a Volume
 * Export HTML to external web servers
+* Change the html skins by direct edits
+* Create HTML, images, and reports as part of standard runs and store these in a Volume
+
 * **Only** get input from an Observer-like (i.e. IP) source, ignoring USB or serial feeds
   [note that serial/usb drivers are simply commented out in the build]
 
