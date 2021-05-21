@@ -38,3 +38,8 @@ This container has the following WeeWX extensions installed:
 * MQTT
 * FTP
 * HTML (local)
+
+## How to use ##
+Create container with mount points for Volumes or fileshares thus:
+/data  (weewx.conf, MSqllite db)
+/public_html generated html/NOAA reports
