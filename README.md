@@ -41,8 +41,8 @@ This container has the following WeeWX extensions installed:
 
 ## How to use ##
 Create container with mount points for Volumes or fileshares thus:
-| container mount point | contents |
-| ------------ | -------- |
+| container mount point | contents | description |
+| ------------ | -------- | ---------- |
 | /data        | ./etc/weewx.conf | weewx configuration file | 
 |              | ./archive/weewx.sdb | sql lite file if configured |
 |              | ./bin/entrypoint.sh | Docker entrypoint script (testing) | 
