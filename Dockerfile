@@ -31,6 +31,7 @@ COPY checksums requirements.txt ./
 RUN wget -O "${ARCHIVE}" "http://www.weewx.com/downloads/released_versions/${ARCHIVE}"
 RUN wget -O ${WORKDIR}/weewx-mqtt.zip https://github.com/matthewwall/weewx-mqtt/archive/master.zip
 RUN wget -O ${WORKDIR}/weewx-interceptor.zip https://github.com/matthewwall/weewx-interceptor/archive/master.zip
+RUN wget -O ${WORKDIR}/weewx-mqttsubscribe.zip https://github.com/bellrichm/WeeWX-MQTTSubscribe/archive/refs/tags/v2.0.0.zip
 RUN sha256sum -c < checksums
 
 # libraries
@@ -57,21 +58,17 @@ RUN ./setup.py build && ./setup.py install --no-prompt
 WORKDIR ${WEEWX_HOME}
 RUN bin/wee_extension --install $WORKDIR/weewx-mqtt.zip
 RUN bin/wee_extension --install $WORKDIR/weewx-interceptor.zip
+RUN bin/wee_extension --install ${WORKDIR}/weewx-mqttsubscribe.zip
 RUN bin/wee_config --reconfigure --driver=user.interceptor --no-prompt
 
-RUN mkdir /data && touch /data/x && mkdir /data/bin
-##  mkdir /data/etc && \
-##  cp weewx.conf /data/etc && \
-##  mkdir /data/bin && \
-##  cp -r skins /data && \ 
-##  mkdir /data/public_html
+RUN mkdir /data &&  mkdir /data/bin
 
 ## CHANGE below line according to 
 COPY --chown=$WEEWX_UID entrypoint.sh ./bin
 
 RUN apk del .fetch-deps
 RUN rm -fr $WORKDIR
-## RUN find $WEEWX_HOME/bin -name '*.pyc' -exec rm '{}' +;
+RUN find $WEEWX_HOME/bin -name '*.pyc' -exec rm '{}' +;
 
 ENV PATH="/data/bin:$PATH"
 
