@@ -75,5 +75,6 @@ ENV PATH="/data/bin:$PATH"
 ## a volume is an option, but I really want to mount a specific host directory (a bind mount). QNAP interface will not allow this at run-time
 ## VOLUME ["/data"]
 
-ENTRYPOINT ["/bin/sh", "/data/bin/entrypoint.sh"]
+##ENTRYPOINT ["/bin/sh", "/data/bin/entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "./bin/entrypoint.sh"]
 CMD ["weewx.conf"]
