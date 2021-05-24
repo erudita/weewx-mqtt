@@ -9,8 +9,9 @@ WEEWX_DAEMON=${HOMEDIR}/bin/weewxd
 WEEWX_CONFIG=${HOMEDIR}/bin/wee_config
 DIST_CONF_FILE=${HOMEDIR}/weewx.conf
 DATA_DIR="/data"
+CONF_DIR=${DATA_DIR}/etc
 HTML_DIR="/public_html"
-CONF_FILE=${DATA_DIR}/etc/weewx.conf
+CONF_FILE=${CONF_DIR}/weewx.conf
 ARCHIVE_CONF_FILE=${CONF_FILE}.${NOW}
 ##
 ## The override file. Do not change this name to be entrypoint.sh.
@@ -39,8 +40,7 @@ else
 fi
 
 if [ $# -lt 1 ]; then
-  echo "no arguments"
-  echo "STARTING WEEWX"
+  echo "STARTING WEEWX - no special arguments"
   echo "exec ${WEEWX_DAEMON} $CONF_FILE"
   exec ${WEEWX_DAEMON} $CONF_FILE
 fi
@@ -55,6 +55,13 @@ fi
 # copy + edit dist config file
 if [ ! -e ${CONF_FILE} ]; then
   echo "Create working Config file"
+  if [ ! -d ${CONF_DIR} ]; then
+    mkdir ${CONF_DIR}
+  fi
+  if [ ! -d ${DATA_DIR}/archive ]; then
+    mkdir ${DATA_DIR}/archive
+  fi
+
   cp ${DIST_CONF_FILE} ${CONF_FILE}
   chmod 755 ${CONF_FILE}
   echo "chown ${WEEWX_UID:-weewx} ${CONF_FILE}"
