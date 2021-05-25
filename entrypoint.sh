@@ -2,15 +2,17 @@
 
 
 # home directory
+# most of these are set in the Dockerfile
 NOW=`date -Iseconds`
 SYSLOG="/sbin/syslogd"
 HOMEDIR=/home/${WEEWX_UID:-weewx}
+DATA_DIR=${WEEWX_DATA:-/data}
+SQLLITE_DIR=${WEEWX_SQL_DIR-${DATA_DIR}/archive}
+CONF_DIR=${WEEWX_CONF_DIR-${DATA_DIR}/etc}
 WEEWX_DAEMON=${HOMEDIR}/bin/weewxd
 WEEWX_CONFIG=${HOMEDIR}/bin/wee_config
 DIST_CONF_FILE=${HOMEDIR}/weewx.conf
-DATA_DIR="/data"
-CONF_DIR=${DATA_DIR}/etc
-HTML_DIR="/public_html"
+HTML_DIR=${WEEWX_HTML-/public_html}
 CONF_FILE=${CONF_DIR}/weewx.conf
 ARCHIVE_CONF_FILE=${CONF_FILE}.${NOW}
 ##
@@ -22,11 +24,12 @@ ENTRYPOINT_OVERRIDE=${DATA_DIR}/bin/entrypoint_override.sh
 PATH=$HOMEDIR/bin:$PATH
 
 # echo key parameters for debug
-for X in NOW WEEWX_DAEMON CONF_FILE DIST_CONF_FILE ARCHIVE_CONF_FILE ENTRYPOINT_OVERRIDE
+for X in NOW DATA_DIR CONF_DIR SQLLITE_DIR HTML_DIR CONF_FILE DIST_CONF_FILE ARCHIVE_CONF_FILE ENTRYPOINT_OVERRIDE
 do
   eval Y='$'$X
   echo ${X} "is" ${Y}
 done
+
 
 # Check to see if this is the standard entrypoint and an override exists
 if [ "$0" = $ENTRYPOINT_OVERRIDE ]; then
@@ -51,15 +54,17 @@ if [ "$1" = "--upgrade" ]; then
   exit 0
 fi
 
-
 # copy + edit dist config file
 if [ ! -e ${CONF_FILE} ]; then
   echo "Create working Config file"
   if [ ! -d ${CONF_DIR} ]; then
-    mkdir ${CONF_DIR}
+    mkdir -p ${CONF_DIR}
   fi
-  if [ ! -d ${DATA_DIR}/archive ]; then
-    mkdir ${DATA_DIR}/archive
+  if [ ! -d ${SQLLITE_DIR} ]; then
+    mkdir -p ${SQLLITE_DIR}
+  fi
+  if [ ! -d ${HTML_DIR} ]; then
+    mkdir -p ${HTML_DIR}
   fi
 
   cp ${DIST_CONF_FILE} ${CONF_FILE}
@@ -70,9 +75,9 @@ if [ ! -e ${CONF_FILE} ]; then
 
   # Change 2 areas which will emit data
   # Change default sql location
-  sed -i "s/SQLITE_ROOT =.*/SQLITE_ROOT = \$"{DATA_DIR}"\/archive/g" "${CONF_FILE}"
+  sed -i "s;SQLITE_ROOT =.*;SQLITE_ROOT = ${SQLLITE_DIR};g" "${CONF_FILE}"
   # Change default html location
-  sed -i "s/HTML_ROOT =.*/HTML_ROOT = \${HTML_DIR}/g" "${CONF_FILE}"
+  sed -i "s;HTML_ROOT =.*;HTML_ROOT = ${HTML_DIR};g" "${CONF_FILE}"
 fi
 
 #
