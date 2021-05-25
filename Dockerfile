@@ -1,4 +1,4 @@
-FROM alpine:3-alpine as stage-1
+FROM python:3-alpine as stage-1
 
 # general
 
