@@ -52,8 +52,10 @@ RUN apk add --no-cache --virtual .fetch-deps \
 # WeeWX install. See https://www.weewx.com/docs/setup.htm
 RUN tar --extract --gunzip --directory . --strip-components=1 --file "${ARCHIVE}"
 
+RUN ln -s python3 /usr/bin/python
+
 # Stage Python setup
-RUN python -m venv /opt/venv
+RUN /usr/bin/python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"      
 RUN pip install -r ./requirements.txt && ln -s python3 /usr/bin/python
 
@@ -86,6 +88,11 @@ ENV WEEWX_VERSION="4.5.1" \
     WEEWX_SQL_DIR="/data/archive" \
     WEEWX_CONF_DIR="/data/etc" \
     WEEWX_HTML="/public_html"
+    
+# add user
+RUN addgroup --system --gid ${WEEWX_UID} weewx \
+  && adduser --system --uid ${WEEWX_UID} --ingroup weewx weewx
+    
     
 WORKDIR ${WEEWX_HOME}
 COPY --from=stage-1 /opt/venv /opt/venv
