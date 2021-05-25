@@ -60,25 +60,29 @@ if [ ! -e ${CONF_FILE} ]; then
   if [ ! -d ${CONF_DIR} ]; then
     mkdir -p ${CONF_DIR}
   fi
-  if [ ! -d ${SQLLITE_DIR} ]; then
-    mkdir -p ${SQLLITE_DIR}
-  fi
-  if [ ! -d ${HTML_DIR} ]; then
-    mkdir -p ${HTML_DIR}
-  fi
 
   cp ${DIST_CONF_FILE} ${CONF_FILE}
   chmod 755 ${CONF_FILE}
   echo "chown ${WEEWX_UID:-weewx} ${CONF_FILE}"
   chown ${WEEWX_UID:-weewx} ${CONF_FILE}
-  echo "default file copied"
 
   # Change 2 areas which will emit data
   # Change default sql location
   sed -i "s;SQLITE_ROOT =.*;SQLITE_ROOT = ${SQLLITE_DIR};g" "${CONF_FILE}"
   # Change default html location
   sed -i "s;HTML_ROOT =.*;HTML_ROOT = ${HTML_DIR};g" "${CONF_FILE}"
+  echo "default file copied and updated"
 fi
+
+# make directories
+for X in ${SQLLITE_DIR} ${HTML_DIR}
+do
+  if [ ! -d ${HTML_DIR} ]; then
+    echo "Creating ${X}"
+    mkdir -p ${X}
+    chown ${WEEWX_UID:-weewx} ${X}
+  fi
+done
 
 #
 # Check syslog
