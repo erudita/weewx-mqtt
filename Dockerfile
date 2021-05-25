@@ -1,4 +1,4 @@
-FROM alpine:3.13
+FROM alpine:3.13 as stage-1
 
 # general
 
@@ -48,11 +48,15 @@ RUN apk add --no-cache --update \
 RUN apk add --no-cache --virtual .fetch-deps \
       file freetype-dev g++ gawk gcc git jpeg-dev libpng-dev make musl-dev \
       py3-pip py3-wheel python3-dev zlib-dev mariadb-dev
+      
+# WeeWX install. See https://www.weewx.com/docs/setup.htm
+RUN tar --extract --gunzip --directory . --strip-components=1 --file "${ARCHIVE}"
+
+# Stage Python setup
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"      
 RUN pip install -r ./requirements.txt && ln -s python3 /usr/bin/python
 
-# WeeWX install. See https://www.weewx.com/docs/setup.htm
-
-RUN tar --extract --gunzip --directory . --strip-components=1 --file "${ARCHIVE}"
 ## RUN chown -R weewx:weewx ${WEEWX_HOME}
 
 # Weewx Setup 
@@ -67,16 +71,31 @@ RUN bin/wee_extension --install ${WORKDIR}/weewx-mqttsubscribe.zip
 # to enable mqttsubscribe as driver, uncomment below
 ## RUN bin/wee_config --reconfig
 
-RUN mkdir /data &&  mkdir /data/bin
+## RUN mkdir /data &&  mkdir /data/bin
 
 ## CHANGE below line according to 
 COPY --chown=$WEEWX_UID entrypoint.sh ./bin
 
-RUN apk del .fetch-deps
-RUN rm -fr $WORKDIR
-RUN find $WEEWX_HOME/bin -name '*.pyc' -exec rm '{}' +;
+# Stage Python setup
+FROM python:3-slim as stage-2
+ARG WEEWX_UID=1001
 
-ENV PATH="/data/bin:$PATH"
+ENV WEEWX_VERSION="4.5.1" \
+    WEEWX_HOME="/home/weewx" \
+    WEEWX_DATA="/data" \
+    WEEWX_SQL_DIR="/data/archive" \
+    WEEWX_CONF_DIR="/data/etc" \
+    WEEWX_HTML="/public_html"
+    
+WORKDIR ${WEEWX_HOME}
+COPY --from=stage-1 /opt/venv /opt/venv
+COPY --from=stage-1 ${WEEWX_HOME} ${WEEWX_HOME}
+
+# RUN apk del .fetch-deps
+# RUN rm -fr $WORKDIR
+# RUN find $WEEWX_HOME/bin -name '*.pyc' -exec rm '{}' +;
+
+# ENV PATH="/data/bin:$PATH"
 
 ## a volume is an option, but I really want to mount a specific host directory (a bind mount). QNAP interface will not allow this at run-time
 ## VOLUME [${WEEWX_DATA|]
