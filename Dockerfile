@@ -9,7 +9,7 @@ ENV WEEWX_VERSION="4.5.1" \
     WEEWX_HOME="/home/weewx" \
     WEEWX_DATA="/data" \
     WEEWX_SQL_DIR="/data/archive" \
-    WEEWX_CONF_DIR="/data/etc \
+    WEEWX_CONF_DIR="/data/etc" \
     WEEWX_HTML="/public_html"
     
 ARG ARCHIVE="weewx-${WEEWX_VERSION}.tar.gz"
