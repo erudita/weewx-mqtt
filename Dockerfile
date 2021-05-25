@@ -1,4 +1,4 @@
-FROM python:3-alpine as stage-1
+FROM alpine:3.13
 
 # general
 
@@ -52,11 +52,6 @@ RUN apk add --no-cache --virtual .fetch-deps \
 # WeeWX install. See https://www.weewx.com/docs/setup.htm
 RUN tar --extract --gunzip --directory . --strip-components=1 --file "${ARCHIVE}"
 
-RUN ln -s python3 /usr/bin/python
-
-# Stage Python setup
-RUN /usr/bin/python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"      
 RUN pip install -r ./requirements.txt && ln -s python3 /usr/bin/python
 
 ## RUN chown -R weewx:weewx ${WEEWX_HOME}
@@ -78,29 +73,9 @@ RUN bin/wee_extension --install ${WORKDIR}/weewx-mqttsubscribe.zip
 ## CHANGE below line according to 
 COPY --chown=$WEEWX_UID entrypoint.sh ./bin
 
-# Stage Python setup
-FROM python:3-slim as stage-2
-ARG WEEWX_UID=1001
-
-ENV WEEWX_VERSION="4.5.1" \
-    WEEWX_HOME="/home/weewx" \
-    WEEWX_DATA="/data" \
-    WEEWX_SQL_DIR="/data/archive" \
-    WEEWX_CONF_DIR="/data/etc" \
-    WEEWX_HTML="/public_html"
-    
-# add user
-RUN addgroup --system --gid ${WEEWX_UID} weewx \
-  && adduser --system --uid ${WEEWX_UID} --ingroup weewx weewx
-    
-    
-WORKDIR ${WEEWX_HOME}
-COPY --from=stage-1 /opt/venv /opt/venv
-COPY --from=stage-1 ${WEEWX_HOME} ${WEEWX_HOME}
-
-# RUN apk del .fetch-deps
-# RUN rm -fr $WORKDIR
-# RUN find $WEEWX_HOME/bin -name '*.pyc' -exec rm '{}' +;
+RUN apk del .fetch-deps
+RUN rm -fr $WORKDIR
+RUN find $WEEWX_HOME/bin -name '*.pyc' -exec rm '{}' +;
 
 # ENV PATH="/data/bin:$PATH"
 
