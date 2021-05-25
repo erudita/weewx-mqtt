@@ -62,8 +62,10 @@ RUN ./setup.py build && ./setup.py install --no-prompt
 WORKDIR ${WEEWX_HOME}
 RUN bin/wee_extension --install $WORKDIR/weewx-mqtt.zip
 RUN bin/wee_extension --install $WORKDIR/weewx-interceptor.zip
-RUN bin/wee_extension --install ${WORKDIR}/weewx-mqttsubscribe.zip
 RUN bin/wee_config --reconfigure --driver=user.interceptor --no-prompt
+RUN bin/wee_extension --install ${WORKDIR}/weewx-mqttsubscribe.zip
+# to enable mqttsubscribe as driver, uncomment below
+## RUN bin/wee_config --reconfig
 
 RUN mkdir /data &&  mkdir /data/bin
 
@@ -77,7 +79,7 @@ RUN find $WEEWX_HOME/bin -name '*.pyc' -exec rm '{}' +;
 ENV PATH="/data/bin:$PATH"
 
 ## a volume is an option, but I really want to mount a specific host directory (a bind mount). QNAP interface will not allow this at run-time
-## VOLUME ["/data"]
+## VOLUME [${WEEWX_DATA|]
 
 ##ENTRYPOINT ["/bin/sh", "/data/bin/entrypoint.sh"]
 ENTRYPOINT ["/bin/sh", "./bin/entrypoint.sh"]
