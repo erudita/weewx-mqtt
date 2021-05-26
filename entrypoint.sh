@@ -54,12 +54,19 @@ if [ "$1" = "--upgrade" ]; then
   exit 0
 fi
 
+# make directories
+for X in ${CONF_DIR} ${SQLLITE_DIR} ${HTML_DIR}
+do
+  if [ ! -d ${X} ]; then
+    echo "Creating ${X}"
+    mkdir -p ${X}
+    chown ${WEEWX_UID:-weewx} ${X}
+  fi
+done
+
 # copy + edit dist config file
 if [ ! -e ${CONF_FILE} ]; then
   echo "Create working Config file"
-  if [ ! -d ${CONF_DIR} ]; then
-    mkdir -p ${CONF_DIR}
-  fi
 
   cp ${DIST_CONF_FILE} ${CONF_FILE}
   chmod 755 ${CONF_FILE}
@@ -74,15 +81,6 @@ if [ ! -e ${CONF_FILE} ]; then
   echo "default file copied and updated"
 fi
 
-# make directories
-for X in ${SQLLITE_DIR} ${HTML_DIR}
-do
-  if [ ! -d ${HTML_DIR} ]; then
-    echo "Creating ${X}"
-    mkdir -p ${X}
-    chown ${WEEWX_UID:-weewx} ${X}
-  fi
-done
 
 #
 # Check syslog
