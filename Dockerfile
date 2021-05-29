@@ -64,10 +64,11 @@ RUN ./setup.py build && ./setup.py install --no-prompt
 WORKDIR ${WEEWX_HOME}
 RUN bin/wee_extension --install $WORKDIR/weewx-mqtt.zip
 RUN bin/wee_extension --install $WORKDIR/weewx-interceptor.zip
-RUN bin/wee_config --reconfigure --driver=user.interceptor --no-prompt --units=metric
+# to enable mqtt as driver, uncomment below
+## RUN bin/wee_config --reconfigure --driver=user.interceptor --no-prompt --units=metric
 RUN bin/wee_extension --install ${WORKDIR}/weewx-mqttsubscribe.zip
 # to enable mqttsubscribe as driver, uncomment below
-## RUN bin/wee_config --reconfig
+RUN bin/wee_config --reconfig --no-prompt --units=metric
 
 ## RUN mkdir /data &&  mkdir /data/bin
 
