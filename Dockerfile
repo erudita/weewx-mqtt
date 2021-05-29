@@ -68,7 +68,7 @@ RUN bin/wee_extension --install $WORKDIR/weewx-interceptor.zip
 ## RUN bin/wee_config --reconfigure --driver=user.interceptor --no-prompt --units=metric
 RUN bin/wee_extension --install ${WORKDIR}/weewx-mqttsubscribe.zip
 # to enable mqttsubscribe as driver, uncomment below
-RUN bin/wee_config --reconfig --no-prompt --units=metric
+RUN bin/wee_config --reconfigure --no-prompt --units=metric
 
 ## RUN mkdir /data &&  mkdir /data/bin
 
