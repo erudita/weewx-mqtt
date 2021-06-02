@@ -2,35 +2,48 @@
 
 
 # home directory
+# most of these are set in the Dockerfile
 NOW=`date -Iseconds`
+SYSLOG="/sbin/syslogd"
 HOMEDIR=/home/${WEEWX_UID:-weewx}
+DATA_DIR=${WEEWX_DATA:-/data}
+SQLLITE_DIR=${WEEWX_SQL_DIR-${DATA_DIR}/archive}
+CONF_DIR=${WEEWX_CONF_DIR-${DATA_DIR}/etc}
 WEEWX_DAEMON=${HOMEDIR}/bin/weewxd
 WEEWX_CONFIG=${HOMEDIR}/bin/wee_config
 DIST_CONF_FILE=${HOMEDIR}/weewx.conf
-CONF_FILE="/data/etc/weewx.conf"
+HTML_DIR=${WEEWX_HTML-/public_html}
+CONF_FILE=${CONF_DIR}/weewx.conf
 ARCHIVE_CONF_FILE=${CONF_FILE}.${NOW}
+##
+## The override file. Do not change this name to be entrypoint.sh.
+## If it exists and this file ($0) is not the same it will be executed
+ENTRYPOINT_OVERRIDE=${DATA_DIR}/bin/entrypoint_override.sh
+##ENTRYPOINT_OVERRIDE=/tmp/foo
 
 PATH=$HOMEDIR/bin:$PATH
 
 # echo key parameters for debug
-for X in NOW WEEWX_DAEMON CONF_FILE DIST_CONF_FILE ARCHIVE_CONF_FILE
+for X in NOW DATA_DIR CONF_DIR SQLLITE_DIR HTML_DIR CONF_FILE DIST_CONF_FILE ARCHIVE_CONF_FILE ENTRYPOINT_OVERRIDE
 do
   eval Y='$'$X
   echo ${X} "is" ${Y}
 done
 
-copy_default_config() {
-  # create config file on the mountable volume
-  echo "Creating a configuration file " ${CONF_FILE}
 
-  cp ${DIST_CONF_FILE} ${CONF_FILE}
-  echo "default config copied"
-
-}
+# Check to see if this is the standard entrypoint and an override exists
+if [ "$0" = $ENTRYPOINT_OVERRIDE ]; then
+  echo "This is the override entrypoint file" $0
+else
+  echo "This is the standard entrypointfile" $0
+  if [ -x ${ENTRYPOINT_OVERRIDE} ]; then
+    echo "Exec Override ${ENTRYPOINT_OVERRIDE} $@"
+    exec ${ENTRYPOINT_OVERRIDE} $@
+  fi
+fi
 
 if [ $# -lt 1 ]; then
-  echo "no arguments"
-  echo "STARTING WEEWX"
+  echo "STARTING WEEWX - no special arguments"
   echo "exec ${WEEWX_DAEMON} $CONF_FILE"
   exec ${WEEWX_DAEMON} $CONF_FILE
 fi
@@ -41,22 +54,33 @@ if [ "$1" = "--upgrade" ]; then
   exit 0
 fi
 
+# make directories
+for X in ${CONF_DIR} ${SQLLITE_DIR} ${HTML_DIR}
+do
+  if [ ! -d ${X} ]; then
+    echo "Creating ${X}"
+    mkdir -p ${X}
+    chown ${WEEWX_UID:-weewx} ${X}
+  fi
+done
 
 # copy + edit dist config file
 if [ ! -e ${CONF_FILE} ]; then
   echo "Create working Config file"
+
   cp ${DIST_CONF_FILE} ${CONF_FILE}
   chmod 755 ${CONF_FILE}
   echo "chown ${WEEWX_UID:-weewx} ${CONF_FILE}"
   chown ${WEEWX_UID:-weewx} ${CONF_FILE}
-  echo "default file copied"
 
   # Change 2 areas which will emit data
   # Change default sql location
-  sed -i "s/SQLITE_ROOT =.*/SQLITE_ROOT = \/data\/archive/g" "${CONF_FILE}"
+  sed -i "s;SQLITE_ROOT =.*;SQLITE_ROOT = ${SQLLITE_DIR};g" "${CONF_FILE}"
   # Change default html location
-  sed -i "s/HTML_ROOT =.*/HTML_ROOT = \/public_html/g" "${CONF_FILE}"
+  sed -i "s;HTML_ROOT =.*;HTML_ROOT = ${HTML_DIR};g" "${CONF_FILE}"
+  echo "default file copied and updated"
 fi
+
 
 #
 # Check syslog
@@ -70,7 +94,11 @@ echo "CHECKING SYSLOG"
 LINES=`ps a | grep syslog | grep -v "grep" | wc -l`
 if [ ${LINES} -lt 1 ]; then
   echo "SYSLOG not running"
-  /sbin/syslogd -n -S -O - &
+  if [ -x ${SYSLOG} ]; then
+    ${SYSLOG} -n -S -O - &
+  else
+    echo "SYSLOG daemon ${SYSLOG} not available"
+  fi
 else
   echo "SYSLOG already running"
 fi

@@ -28,6 +28,7 @@ This container has the following WeeWX extensions installed:
 
 * [interceptor](https://github.com/matthewwall/weewx-interceptor)
 * [mqtt](https://github.com/weewx/weewx/wiki/mqtt)
+* [mqttSubscribe](https://github.com/bellrichm/WeeWX-MQTTSubscribe)
 
 ## Input Sources ##
 * ~~USB driver~~
@@ -37,7 +38,7 @@ This container has the following WeeWX extensions installed:
 ## Output ##
 In addition to standard configurable output, such as FTP, various weather site updates, 
 
-* MQTT
+* MQTT (with mqtt)
 
 
 ## How to use ##
