@@ -1,4 +1,4 @@
-FROM alpine:3.13
+FROM alpine:3.15
 
 # general
 
@@ -6,7 +6,7 @@ ARG WEEWX_UID=1001
 
 ARG WORKDIR=/tmp/webuild/
     
-ENV WEEWX_VERSION="4.5.1" \
+ENV WEEWX_VERSION="4.8.0" \
     WEEWX_HOME="/home/weewx" \
     WEEWX_DATA="/data" \
     WEEWX_SQL_DIR="/data/archive" \
