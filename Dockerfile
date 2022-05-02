@@ -7,6 +7,7 @@ ARG WEEWX_UID=1001
 ARG WORKDIR=/tmp/webuild/
     
 ENV WEEWX_VERSION="4.8.0" \
+    WEEWX_MQTTSUBSCRIBE_TAG="v2.1.0" \
     WEEWX_HOME="/home/weewx" \
     WEEWX_DATA="/data" \
     WEEWX_SQL_DIR="/data/archive" \
@@ -14,6 +15,7 @@ ENV WEEWX_VERSION="4.8.0" \
     WEEWX_HTML="/public_html"
     
 ARG ARCHIVE="weewx-${WEEWX_VERSION}.tar.gz"
+ARG WEEWX_MQTTSUBSCRIBE_ARCHIVE="${WORKDIR}/weewx-mqttsubscribe-${WEEWX_MQTTSUBSCRIBE_TAG}.zip"
 
 LABEL org.opencontainers.image.authors="erudita@ankubis.com" \
       org.opencontainers.image.vendor="Ankubis" \
@@ -47,7 +49,7 @@ RUN apk add --no-cache --virtual .fetch-deps \
 RUN wget -O "${ARCHIVE}" "http://www.weewx.com/downloads/released_versions/${ARCHIVE}" && \ 
     wget -O ${WORKDIR}/weewx-mqtt.zip https://github.com/matthewwall/weewx-mqtt/archive/master.zip && \ 
     wget -O ${WORKDIR}/weewx-interceptor.zip https://github.com/matthewwall/weewx-interceptor/archive/master.zip && \ 
-    wget -O ${WORKDIR}/weewx-mqttsubscribe.zip https://github.com/bellrichm/WeeWX-MQTTSubscribe/archive/refs/tags/v2.0.0.zip && \ 
+    wget -O ${WEEWX_MQTTSUBSCRIBE_ARCHIVE} https://github.com/bellrichm/WeeWX-MQTTSubscribe/archive/refs/tags/${WEEWX_MQTTSUBSCRIBE_TAG}.zip && \ 
     sha256sum -c < checksums
       
 # WeeWX install. See https://www.weewx.com/docs/setup.htm
@@ -66,7 +68,7 @@ RUN bin/wee_extension --install $WORKDIR/weewx-mqtt.zip
 RUN bin/wee_extension --install $WORKDIR/weewx-interceptor.zip
 # to enable mqtt as driver, uncomment below
 ## RUN bin/wee_config --reconfigure --driver=user.interceptor --no-prompt --units=metric
-RUN bin/wee_extension --install ${WORKDIR}/weewx-mqttsubscribe.zip
+RUN bin/wee_extension --install ${WEEWX_MQTTSUBSCRIBE_ARCHIVE}
 # to enable mqttsubscribe as driver, uncomment below
 RUN bin/wee_config --reconfigure --no-prompt --units=metric
 
