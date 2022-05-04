@@ -29,7 +29,7 @@ This package is for a someone that wants to:
 
 This container has the following WeeWX extensions installed:
 
-* [interceptor](https://github.com/erudita/weewx-interceptor) forked from [interceptor](https://github.com/matthewwall/weewx-interceptor) for Ecowitt WH90
+* [interceptor](https://github.com/erudita/weewx-interceptor), which is forked from [interceptor](https://github.com/matthewwall/weewx-interceptor) to include Ecowitt WH90
 * [mqtt](https://github.com/weewx/weewx/wiki/mqtt)
 * [mqttSubscribe](https://github.com/bellrichm/WeeWX-MQTTSubscribe)
 
