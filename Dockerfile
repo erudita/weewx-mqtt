@@ -48,7 +48,7 @@ RUN apk add --no-cache --virtual .fetch-deps \
 # Download sources and verify hashes
 RUN wget -O "${ARCHIVE}" "http://www.weewx.com/downloads/released_versions/${ARCHIVE}" && \ 
     wget -O ${WORKDIR}/weewx-mqtt.zip https://github.com/matthewwall/weewx-mqtt/archive/master.zip && \ 
-    wget -O ${WORKDIR}/weewx-interceptor.zip https://github.com/matthewwall/weewx-interceptor/archive/master.zip && \ 
+    wget -O ${WORKDIR}/weewx-interceptor.zip https://github.com/erudita/weewx-interceptor/dev.zip && \ 
     wget -O ${WEEWX_MQTTSUBSCRIBE_ARCHIVE} https://github.com/bellrichm/WeeWX-MQTTSubscribe/archive/refs/tags/${WEEWX_MQTTSUBSCRIBE_TAG}.zip && \ 
     sha256sum -c < checksums
       
