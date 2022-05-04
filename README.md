@@ -29,7 +29,7 @@ This package is for a someone that wants to:
 
 This container has the following WeeWX extensions installed:
 
-* [interceptor](https://github.com/matthewwall/weewx-interceptor)
+* [interceptor](https://github.com/erudita/weewx-interceptor) forked from [interceptor](https://github.com/matthewwall/weewx-interceptor) for Ecowitt WH90
 * [mqtt](https://github.com/weewx/weewx/wiki/mqtt)
 * [mqttSubscribe](https://github.com/bellrichm/WeeWX-MQTTSubscribe)
 
@@ -53,7 +53,7 @@ Create container with mount points for Volumes or fileshares thus:
 |              | ./archive/weewx.sdb | sqlite databases if configured |
 |              | ./bin/entrypoint.sh | Docker entrypoint script (testing) | 
 |              | ./skins              | weewx skins
-| /public_html | \<files\> | generated web pages and images |
+| /public_html | \<files\> | generated web pages and images (can be changed in weewx.conf) |
 
 Port 8080 is the default port used by Interceptor.
 It will need to be exposed in some way (NAT, direct, etc.)
