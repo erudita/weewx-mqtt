@@ -52,8 +52,7 @@ RUN wget -O "${WEEWX_ARCHIVE}" "http://www.weewx.com/downloads/released_versions
     wget -O ${WORKDIR}/weewx-mqtt.zip https://github.com/matthewwall/weewx-mqtt/archive/master.zip && \ 
     wget -O ${WEEWX_INTERCEPTOR_ARCHIVE} https://github.com/erudita/weewx-interceptor/archive/refs/tags/${WEEWX_INTERCEPTOR_TAG}.zip && \ 
     wget -O ${WEEWX_MQTTSUBSCRIBE_ARCHIVE} https://github.com/bellrichm/WeeWX-MQTTSubscribe/archive/refs/tags/${WEEWX_MQTTSUBSCRIBE_TAG}.zip
-RUN
-    sha256sum -c < checksums
+RUN sha256sum -c < checksums
       
 # WeeWX install. See https://www.weewx.com/docs/setup.htm
 RUN tar --extract --gunzip --directory . --strip-components=1 --file "${ARCHIVE}"
