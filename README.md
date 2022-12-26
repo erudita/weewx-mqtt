@@ -36,7 +36,7 @@ This container has the following WeeWX extensions installed:
 ## Input Sources ##
 * ~~USB driver~~
 * ~~Serial Driver~~
-* Interceptor
+* Interceptor (latest)
 * MQTTSubscribe
 
 ## Output ##
