@@ -55,7 +55,7 @@ RUN wget -O "${WEEWX_ARCHIVE}" "http://www.weewx.com/downloads/released_versions
 RUN sha256sum -c < checksums
       
 # WeeWX install. See https://www.weewx.com/docs/setup.htm
-RUN tar --extract --gunzip --directory . --strip-components=1 --file "${ARCHIVE}"
+RUN tar --extract --gunzip --directory . --strip-components=1 --file "${WEEWX_ARCHIVE}"
 
 RUN pip install -r ./requirements.txt && ln -s python3 /usr/bin/python
 
