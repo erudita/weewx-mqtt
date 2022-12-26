@@ -51,7 +51,8 @@ RUN apk add --no-cache --virtual .fetch-deps \
 RUN wget -O "${WEEWX_ARCHIVE}" "http://www.weewx.com/downloads/released_versions/${WEEWX_ARCHIVE}" && \ 
     wget -O ${WORKDIR}/weewx-mqtt.zip https://github.com/matthewwall/weewx-mqtt/archive/master.zip && \ 
     wget -O ${WEEWX_INTERCEPTOR_ARCHIVE} https://github.com/erudita/weewx-interceptor/archive/refs/tags/${WEEWX_INTERCEPTOR_TAG}.zip && \ 
-    wget -O ${WEEWX_MQTTSUBSCRIBE_ARCHIVE} https://github.com/bellrichm/WeeWX-MQTTSubscribe/archive/refs/tags/${WEEWX_MQTTSUBSCRIBE_TAG}.zip && \ 
+    wget -O ${WEEWX_MQTTSUBSCRIBE_ARCHIVE} https://github.com/bellrichm/WeeWX-MQTTSubscribe/archive/refs/tags/${WEEWX_MQTTSUBSCRIBE_TAG}.zip
+RUN
     sha256sum -c < checksums
       
 # WeeWX install. See https://www.weewx.com/docs/setup.htm
