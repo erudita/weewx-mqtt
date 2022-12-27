@@ -8,7 +8,7 @@ ARG WORKDIR=/tmp/webuild/
     
 ENV WEEWX_VERSION="4.9.1" \
     WEEWX_MQTTSUBSCRIBE_TAG="v2.1.0" \
-    WEEWX_INTERCEPTOR_TAG="v0.60" \
+    WEEWX_INTERCEPTOR_TAG="v0.60A" \
     WEEWX_HOME="/home/weewx" \
     WEEWX_DATA="/data" \
     WEEWX_SQL_DIR="/data/archive" \
