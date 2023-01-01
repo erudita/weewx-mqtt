@@ -76,7 +76,7 @@ RUN bin/wee_extension --install ${WEEWX_INTERCEPTOR_ARCHIVE}
 RUN bin/wee_extension --install ${WEEWX_MQTTSUBSCRIBE_ARCHIVE}
 # to enable mqttsubscribe as driver, uncomment below
 RUN bin/wee_config --reconfigure --no-prompt --units=metric
-RUN bin/wee_extension --install ${WEEWX_WS90SOIL_ARCHIVEE}
+RUN bin/wee_extension --install ${WEEWX_WS90SOIL_ARCHIVE}
 
 ## RUN mkdir /data &&  mkdir /data/bin
 
