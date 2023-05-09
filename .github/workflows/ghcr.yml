@@ -11,7 +11,8 @@ name: Create and publish a Docker image
 
 on:
   push:
-    branches: ['main']
+    branches: ['release']
+    # currently no release - manual push
     
   workflow_dispatch:
     inputs:
