@@ -8,8 +8,7 @@ ARG WORKDIR=/tmp/webuild/
     
 ENV WEEWX_VERSION="4.9.1" \
     WEEWX_MQTTSUBSCRIBE_TAG="v2.1.0" \
-    WEEWX_INTERCEPTOR_TAG="0.60A" \
-    WEEWX_WS90_TAG="v0.2.0a" \
+    WEEWX_INTERCEPTOR_TAG="0.60B" \
     WEEWX_HOME="/home/weewx" \
     WEEWX_DATA="/data" \
     WEEWX_SQL_DIR="/data/archive" \
@@ -19,7 +18,6 @@ ENV WEEWX_VERSION="4.9.1" \
 ARG WEEWX_ARCHIVE="weewx-${WEEWX_VERSION}.tar.gz"
 ARG WEEWX_MQTTSUBSCRIBE_ARCHIVE="${WORKDIR}/weewx-mqttsubscribe-${WEEWX_MQTTSUBSCRIBE_TAG}.zip"
 ARG WEEWX_INTERCEPTOR_ARCHIVE="${WORKDIR}/weewx-interceptor-${WEEWX_INTERCEPTOR_TAG}.zip"
-ARG WEEWX_WS90SOIL_ARCHIVE="${WORKDIR}/weewx-ws90-${WEEWX_WS90_TAG}.zip"
 
 LABEL org.opencontainers.image.authors="erudita@ankubis.com" \
       org.opencontainers.image.vendor="Ankubis" \
@@ -53,8 +51,7 @@ RUN apk add --no-cache --virtual .fetch-deps \
 RUN wget -O "${WEEWX_ARCHIVE}" "http://www.weewx.com/downloads/released_versions/${WEEWX_ARCHIVE}" && \ 
     wget -O ${WORKDIR}/weewx-mqtt.zip https://github.com/matthewwall/weewx-mqtt/archive/master.zip && \ 
     wget -O ${WEEWX_INTERCEPTOR_ARCHIVE} https://github.com/erudita/weewx-interceptor/archive/refs/tags/${WEEWX_INTERCEPTOR_TAG}.zip && \ 
-    wget -O ${WEEWX_MQTTSUBSCRIBE_ARCHIVE} https://github.com/bellrichm/WeeWX-MQTTSubscribe/archive/refs/tags/${WEEWX_MQTTSUBSCRIBE_TAG}.zip && \
-    wget -O ${WEEWX_WS90SOIL_ARCHIVE} https://github.com/erudita/weewx-ws90/archive/refs/tags/${WEEWX_WS90_TAG}.zip
+    wget -O ${WEEWX_MQTTSUBSCRIBE_ARCHIVE} https://github.com/bellrichm/WeeWX-MQTTSubscribe/archive/refs/tags/${WEEWX_MQTTSUBSCRIBE_TAG}.zip
 RUN sha256sum -c < checksums
       
 # WeeWX install. See https://www.weewx.com/docs/setup.htm
@@ -76,7 +73,6 @@ RUN bin/wee_extension --install ${WEEWX_INTERCEPTOR_ARCHIVE}
 RUN bin/wee_extension --install ${WEEWX_MQTTSUBSCRIBE_ARCHIVE}
 # to enable mqttsubscribe as driver, uncomment below
 RUN bin/wee_config --reconfigure --no-prompt --units=metric
-RUN bin/wee_extension --install ${WEEWX_WS90SOIL_ARCHIVE}
 
 ## RUN mkdir /data &&  mkdir /data/bin
 
