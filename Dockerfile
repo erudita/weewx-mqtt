@@ -6,16 +6,16 @@ ARG WEEWX_UID=1001
 
 ARG WORKDIR=/tmp/webuild/
     
-ENV WEEWX_VERSION="4.8.0" \
+ENV WEEWX_VERSION="4.9.1" \
     WEEWX_MQTTSUBSCRIBE_TAG="v2.1.0" \
-    WEEWX_INTERCEPTOR_TAG="v0.57" \
+    WEEWX_INTERCEPTOR_TAG="0.60B" \
     WEEWX_HOME="/home/weewx" \
     WEEWX_DATA="/data" \
     WEEWX_SQL_DIR="/data/archive" \
     WEEWX_CONF_DIR="/data/etc" \
     WEEWX_HTML="/public_html"
     
-ARG ARCHIVE="weewx-${WEEWX_VERSION}.tar.gz"
+ARG WEEWX_ARCHIVE="weewx-${WEEWX_VERSION}.tar.gz"
 ARG WEEWX_MQTTSUBSCRIBE_ARCHIVE="${WORKDIR}/weewx-mqttsubscribe-${WEEWX_MQTTSUBSCRIBE_TAG}.zip"
 ARG WEEWX_INTERCEPTOR_ARCHIVE="${WORKDIR}/weewx-interceptor-${WEEWX_INTERCEPTOR_TAG}.zip"
 
@@ -48,14 +48,14 @@ RUN apk add --no-cache --virtual .fetch-deps \
       py3-pip py3-wheel python3-dev zlib-dev mariadb-dev
 
 # Download sources and verify hashes
-RUN wget -O "${ARCHIVE}" "http://www.weewx.com/downloads/released_versions/${ARCHIVE}" && \ 
+RUN wget -O "${WEEWX_ARCHIVE}" "http://www.weewx.com/downloads/released_versions/${WEEWX_ARCHIVE}" && \ 
     wget -O ${WORKDIR}/weewx-mqtt.zip https://github.com/matthewwall/weewx-mqtt/archive/master.zip && \ 
     wget -O ${WEEWX_INTERCEPTOR_ARCHIVE} https://github.com/erudita/weewx-interceptor/archive/refs/tags/${WEEWX_INTERCEPTOR_TAG}.zip && \ 
-    wget -O ${WEEWX_MQTTSUBSCRIBE_ARCHIVE} https://github.com/bellrichm/WeeWX-MQTTSubscribe/archive/refs/tags/${WEEWX_MQTTSUBSCRIBE_TAG}.zip && \ 
-    sha256sum -c < checksums
+    wget -O ${WEEWX_MQTTSUBSCRIBE_ARCHIVE} https://github.com/bellrichm/WeeWX-MQTTSubscribe/archive/refs/tags/${WEEWX_MQTTSUBSCRIBE_TAG}.zip
+RUN sha256sum -c < checksums
       
 # WeeWX install. See https://www.weewx.com/docs/setup.htm
-RUN tar --extract --gunzip --directory . --strip-components=1 --file "${ARCHIVE}"
+RUN tar --extract --gunzip --directory . --strip-components=1 --file "${WEEWX_ARCHIVE}"
 
 RUN pip install -r ./requirements.txt && ln -s python3 /usr/bin/python
 
